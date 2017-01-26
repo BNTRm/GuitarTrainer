@@ -1,79 +1,97 @@
 package guitartrainer;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.util.Random;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 
 public class Frame extends JFrame{
     
     Frame(){
         super("GuitarTrainer");
-        setBounds(100, 100, 768, 600);
+        setBounds(100, 100, 784, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        /*
-        ImageIcon guitar = new ImageIcon("guitar.png");
-        JLabel wallpaper = new JLabel(guitar);
-        getContentPane().add(wallpaper);
-        wallpaper.setBounds(0, 0, 768, 600);
-        setResizable(false);
-        */
+        
+        JLayeredPane lPane = getLayeredPane();
+        
         ImageIcon grif = new ImageIcon("grif.png");
         JLabel fretboard = new JLabel(grif);
-        getContentPane().setLayout(null);
-        getContentPane().add(fretboard);
-        fretboard.setBounds(0, 0, 768, 200);
+        fretboard.setBounds(0, 0, 769, 200);
+        lPane.add(fretboard, new Integer(2));
         
         JButton noteC = new JButton("C");
-        getContentPane().add(noteC);
         noteC.setBounds(100, 200, 70, 30);
+        lPane.add(noteC, new Integer(2));
         
         JButton noteCD = new JButton("C#/Db");
-        getContentPane().add(noteCD);
         noteCD.setBounds(200, 200, 70, 30);
+        lPane.add(noteCD, new Integer(2));
         
         JButton noteD = new JButton("D");
-        getContentPane().add(noteD);
         noteD.setBounds(300, 200, 70, 30);
+        lPane.add(noteD, new Integer(2));
         
         JButton noteDE = new JButton("D#/Eb");
-        getContentPane().add(noteDE);
         noteDE.setBounds(400, 200, 70, 30);
+        lPane.add(noteDE, new Integer(2));
         
         JButton noteE = new JButton("E");
-        getContentPane().add(noteE);
         noteE.setBounds(500, 200, 70, 30);
+        lPane.add(noteE, new Integer(2));
         
         JButton noteF = new JButton("F");
-        getContentPane().add(noteF);
         noteF.setBounds(600, 200, 70, 30);
+        lPane.add(noteF, new Integer(2));
         
         JButton noteFG = new JButton("F#/Gb");
-        getContentPane().add(noteFG);
         noteFG.setBounds(100, 260, 70, 30);
+        lPane.add(noteFG, new Integer(2));
         
         JButton noteG = new JButton("G");
-        getContentPane().add(noteG);
         noteG.setBounds(200, 260, 70, 30);
+        lPane.add(noteG, new Integer(2));
         
         JButton noteGA = new JButton("G#/Ab");
-        getContentPane().add(noteGA);
         noteGA.setBounds(300, 260, 70, 30);
+        lPane.add(noteGA, new Integer(2));
         
         JButton noteA = new JButton("A");
-        getContentPane().add(noteA);
         noteA.setBounds(400, 260, 70, 30);
+        lPane.add(noteA, new Integer(2));
         
         JButton noteAB = new JButton("A#/Bb");
-        getContentPane().add(noteAB);
         noteAB.setBounds(500, 260, 70, 30);
+        lPane.add(noteAB, new Integer(2));
         
         JButton noteB = new JButton("B");
-        getContentPane().add(noteB);
         noteB.setBounds(600, 260, 70, 30);
+        lPane.add(noteB, new Integer(2));
         
         JButton replay = new JButton("Replay");
-        getContentPane().add(replay);
-        replay.setBounds(20, 530, 100, 30);
+        replay.setBounds(20, 520, 100, 30);
+        lPane.add(replay, new Integer(2));
+        
+        Notes notes = new Notes();
+        randomNote(notes.notes, lPane);
+    }
+    
+    public void randomNote(Note notes[][], JLayeredPane lP){
+        Random r = new Random(System.currentTimeMillis());
+        int i = -1, j = -1;
+        while(i < 0 || i > 5){
+            i = r.nextInt() % 10;
+        }
+        while(j < 0 || j > 11){
+            j = r.nextInt() % 100;
+        }
+        ImageIcon tap = new ImageIcon("tap.png");
+        JLabel note = new JLabel(tap);
+        note.setBounds(i, j, 7, 5);
+        lP.add(note, new Integer(3));
     }
 }
