@@ -2,6 +2,8 @@ package guitartrainer;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Random;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -11,13 +13,15 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 
 public class Frame extends JFrame{
+    private Notes notes = new Notes();
     
     Frame(){
         super("GuitarTrainer");
-        setBounds(100, 100, 784, 600);
+        setBounds(100, 100, 774, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
         
-        JLayeredPane lPane = getLayeredPane();
+        final JLayeredPane lPane = getLayeredPane();
         
         ImageIcon grif = new ImageIcon("grif.png");
         JLabel fretboard = new JLabel(grif);
@@ -72,12 +76,23 @@ public class Frame extends JFrame{
         noteB.setBounds(600, 260, 70, 30);
         lPane.add(noteB, new Integer(2));
         
+        randomNote(notes.getNotes(), lPane);
+        
         JButton replay = new JButton("Replay");
         replay.setBounds(20, 520, 100, 30);
         lPane.add(replay, new Integer(2));
+        /*
+        replay.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                randomNote(notes, lPane);
+            }
+        });*/
         
-        Notes notes = new Notes();
-        randomNote(notes.notes, lPane);
+        JLabel points = new JLabel();
+        points.setBounds(649, 520, 100, 30);
+        points.setOpaque(true);
+        points.setBackground(Color.gray);
+        lPane.add(points, new Integer(3));
     }
     
     public void randomNote(Note notes[][], JLayeredPane lP){
@@ -91,7 +106,8 @@ public class Frame extends JFrame{
         }
         ImageIcon tap = new ImageIcon("tap.png");
         JLabel note = new JLabel(tap);
-        note.setBounds(i, j, 7, 5);
+        System.out.println((i+1) + ":" + (j+1));
+        note.setBounds(notes[i][j].getX(), notes[i][j].getY(), 11, 11);
         lP.add(note, new Integer(3));
     }
 }
