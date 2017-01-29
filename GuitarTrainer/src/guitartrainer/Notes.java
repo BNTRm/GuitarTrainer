@@ -80,26 +80,26 @@ public class Notes {
         for(int i = 0; i < 6; i ++){
             for(int j = 0; j < 12; j ++){
                 switch(i){
-                    case 0: {notes[i][j].setY(47); break;}
-                    case 1: {notes[i][j].setY(64); break;}
-                    case 2: {notes[i][j].setY(85); break;}
-                    case 3: {notes[i][j].setY(103); break;}
-                    case 4: {notes[i][j].setY(122); break;}
-                    case 5: {notes[i][j].setY(141); break;}
+                    case 0: {notes[i][j].setY(45); break;}
+                    case 1: {notes[i][j].setY(62); break;}
+                    case 2: {notes[i][j].setY(83); break;}
+                    case 3: {notes[i][j].setY(101); break;}
+                    case 4: {notes[i][j].setY(120); break;}
+                    case 5: {notes[i][j].setY(139); break;}
                 }
                 switch(j){
-                    case 0: {notes[i][j].setX(60); break;}
-                    case 1: {notes[i][j].setX(135); break;}
-                    case 2: {notes[i][j].setX(208); break;}
-                    case 3: {notes[i][j].setX(278); break;}
-                    case 4: {notes[i][j].setX(345); break;}
-                    case 5: {notes[i][j].setX(406); break;}
-                    case 6: {notes[i][j].setX(467); break;}
-                    case 7: {notes[i][j].setX(523); break;}
-                    case 8: {notes[i][j].setX(578); break;}
-                    case 9: {notes[i][j].setX(630); break;}
-                    case 10:{notes[i][j].setX(681); break;}
-                    case 11:{notes[i][j].setX(731); break;}
+                    case 0: {notes[i][j].setX(58); break;}
+                    case 1: {notes[i][j].setX(133); break;}
+                    case 2: {notes[i][j].setX(206); break;}
+                    case 3: {notes[i][j].setX(276); break;}
+                    case 4: {notes[i][j].setX(343); break;}
+                    case 5: {notes[i][j].setX(404); break;}
+                    case 6: {notes[i][j].setX(465); break;}
+                    case 7: {notes[i][j].setX(521); break;}
+                    case 8: {notes[i][j].setX(576); break;}
+                    case 9: {notes[i][j].setX(628); break;}
+                    case 10:{notes[i][j].setX(679); break;}
+                    case 11:{notes[i][j].setX(729); break;}
                 }
             }
         }

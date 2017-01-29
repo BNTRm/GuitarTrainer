@@ -24,6 +24,10 @@ public class Note {
         y = newY;
     }
     
+    public String getName(){
+        return name;
+    }
+    
     public int getX(){
         return x;
     }

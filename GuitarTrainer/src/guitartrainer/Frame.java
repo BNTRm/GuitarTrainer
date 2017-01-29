@@ -5,6 +5,9 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -14,6 +17,12 @@ import javax.swing.JLayeredPane;
 
 public class Frame extends JFrame{
     private Notes notes = new Notes();
+    private JLayeredPane lPane;
+    private int string, fret;
+    private ImageIcon tap = new ImageIcon("tap.png");
+    private JLabel note = new JLabel(tap);
+    private JButton noteC, noteCD, noteD, noteDE, noteE, noteF, noteFG, noteG,
+            noteGA, noteA, noteAB, noteB;
     
     Frame(){
         super("GuitarTrainer");
@@ -21,72 +30,93 @@ public class Frame extends JFrame{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         
-        final JLayeredPane lPane = getLayeredPane();
+        lPane = getLayeredPane();
+        
+        ActionListener noteButton = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if(noteB.getText() == notes.getNotes()[string][fret].getName()){
+                    rightAnswer();
+                } else{
+                    wrongAnswer();
+                }
+                randomNote();
+            }
+        };
         
         ImageIcon grif = new ImageIcon("grif.png");
         JLabel fretboard = new JLabel(grif);
         fretboard.setBounds(0, 0, 769, 200);
         lPane.add(fretboard, new Integer(2));
         
-        JButton noteC = new JButton("C");
+        noteC = new JButton("C");
         noteC.setBounds(100, 200, 70, 30);
         lPane.add(noteC, new Integer(2));
+        noteC.addActionListener(noteButton);
         
-        JButton noteCD = new JButton("C#/Db");
+        noteCD = new JButton("C#/Db");
         noteCD.setBounds(200, 200, 70, 30);
         lPane.add(noteCD, new Integer(2));
+        noteCD.addActionListener(noteButton);
         
-        JButton noteD = new JButton("D");
+        noteD = new JButton("D");
         noteD.setBounds(300, 200, 70, 30);
         lPane.add(noteD, new Integer(2));
+        noteD.addActionListener(noteButton);
         
-        JButton noteDE = new JButton("D#/Eb");
+        noteDE = new JButton("D#/Eb");
         noteDE.setBounds(400, 200, 70, 30);
-        lPane.add(noteDE, new Integer(2));
+        lPane.add((noteDE), new Integer(2));
+        noteDE.addActionListener(noteButton);
         
-        JButton noteE = new JButton("E");
+        noteE = new JButton("E");
         noteE.setBounds(500, 200, 70, 30);
         lPane.add(noteE, new Integer(2));
+        noteE.addActionListener(noteButton);
         
-        JButton noteF = new JButton("F");
+        noteF = new JButton("F");
         noteF.setBounds(600, 200, 70, 30);
         lPane.add(noteF, new Integer(2));
+        noteF.addActionListener(noteButton);
         
-        JButton noteFG = new JButton("F#/Gb");
+        noteFG = new JButton("F#/Gb");
         noteFG.setBounds(100, 260, 70, 30);
         lPane.add(noteFG, new Integer(2));
+        noteFG.addActionListener(noteButton);
         
-        JButton noteG = new JButton("G");
+        noteG = new JButton("G");
         noteG.setBounds(200, 260, 70, 30);
         lPane.add(noteG, new Integer(2));
+        noteG.addActionListener(noteButton);
         
-        JButton noteGA = new JButton("G#/Ab");
+        noteGA = new JButton("G#/Ab");
         noteGA.setBounds(300, 260, 70, 30);
         lPane.add(noteGA, new Integer(2));
+        noteGA.addActionListener(noteButton);
         
-        JButton noteA = new JButton("A");
+        noteA = new JButton("A");
         noteA.setBounds(400, 260, 70, 30);
         lPane.add(noteA, new Integer(2));
+        noteA.addActionListener(noteButton);
         
-        JButton noteAB = new JButton("A#/Bb");
+        noteAB = new JButton("A#/Bb");
         noteAB.setBounds(500, 260, 70, 30);
         lPane.add(noteAB, new Integer(2));
+        noteAB.addActionListener(noteButton);
         
-        JButton noteB = new JButton("B");
+        noteB = new JButton("B");
         noteB.setBounds(600, 260, 70, 30);
         lPane.add(noteB, new Integer(2));
+        noteB.addActionListener(noteButton);
         
-        randomNote(notes.getNotes(), lPane);
-        
-        JButton replay = new JButton("Replay");
+        JButton replay = new JButton("Relay");
         replay.setBounds(20, 520, 100, 30);
         lPane.add(replay, new Integer(2));
-        /*
         replay.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                randomNote(notes, lPane);
+                randomNote();
             }
-        });*/
+        });
+        randomNote();
         
         JLabel points = new JLabel();
         points.setBounds(649, 520, 100, 30);
@@ -95,19 +125,41 @@ public class Frame extends JFrame{
         lPane.add(points, new Integer(3));
     }
     
-    public void randomNote(Note notes[][], JLayeredPane lP){
+    public void randomNote(){
+        lPane.remove(note);
+        lPane.revalidate();
+        lPane.repaint();
         Random r = new Random(System.currentTimeMillis());
-        int i = -1, j = -1;
-        while(i < 0 || i > 5){
-            i = r.nextInt() % 10;
+        string = -1;
+        fret = -1;
+        while(string < 0 || string > 5){
+            string = r.nextInt() % 10;
         }
-        while(j < 0 || j > 11){
-            j = r.nextInt() % 100;
+        while(fret < 0 || fret > 11){
+            fret = r.nextInt() % 100;
         }
-        ImageIcon tap = new ImageIcon("tap.png");
-        JLabel note = new JLabel(tap);
-        System.out.println((i+1) + ":" + (j+1));
-        note.setBounds(notes[i][j].getX(), notes[i][j].getY(), 11, 11);
-        lP.add(note, new Integer(3));
+        note.setBounds(notes.getNotes()[string][fret].getX(),
+                notes.getNotes()[string][fret].getY(), 15, 15);
+        lPane.add(note, new Integer(3));
+    }
+    
+    public void rightAnswer(){
+        JLabel notif = new JLabel("RIGHT");
+        notif.setBounds(335, 350, 100, 30);
+        notif.setForeground(Color.green);
+        lPane.add(notif, new Integer(2));
+        //Секундный таймер
+        //Стирание надписи
+        //Добавление в счетчик верных ответов
+    }
+    
+    public void wrongAnswer(){
+        JLabel notif = new JLabel("WRONG");
+        notif.setBounds(335, 350, 100, 30);
+        notif.setForeground(Color.red);
+        lPane.add(notif, new Integer(2));
+        //Секундный таймер
+        //Стирание надписи
+        //Добавление в счетчик неверных ответов
     }
 }
