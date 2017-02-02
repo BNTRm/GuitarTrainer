@@ -2,6 +2,7 @@ package guitartrainer;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
@@ -18,11 +19,14 @@ import javax.swing.JLayeredPane;
 public class Frame extends JFrame{
     private Notes notes = new Notes();
     private JLayeredPane lPane;
-    private int string, fret;
+    private int string, fret, right, wrong;
     private ImageIcon tap = new ImageIcon("tap.png");
-    private JLabel note = new JLabel(tap);
-    private JButton noteC, noteCD, noteD, noteDE, noteE, noteF, noteFG, noteG,
-            noteGA, noteA, noteAB, noteB;
+    private JLabel note = new JLabel(tap), points;
+    private JButton noteButtons[] = {
+        new JButton("C"), new JButton("C#/Db"), new JButton("D"),
+        new JButton("D#/Eb"), new JButton("E"), new JButton("F"),
+        new JButton("F#/Gb"), new JButton("G"), new JButton("G#/Ab"),
+        new JButton("A"), new JButton("A#/Bb"), new JButton("B")};
     
     Frame(){
         super("GuitarTrainer");
@@ -32,96 +36,44 @@ public class Frame extends JFrame{
         
         lPane = getLayeredPane();
         
-        ActionListener noteButton = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if(noteB.getText() == notes.getNotes()[string][fret].getName()){
-                    rightAnswer();
-                } else{
-                    wrongAnswer();
-                }
-                randomNote();
-            }
-        };
-        
         ImageIcon grif = new ImageIcon("grif.png");
         JLabel fretboard = new JLabel(grif);
         fretboard.setBounds(0, 0, 769, 200);
         lPane.add(fretboard, new Integer(2));
         
-        noteC = new JButton("C");
-        noteC.setBounds(100, 200, 70, 30);
-        lPane.add(noteC, new Integer(2));
-        noteC.addActionListener(noteButton);
-        
-        noteCD = new JButton("C#/Db");
-        noteCD.setBounds(200, 200, 70, 30);
-        lPane.add(noteCD, new Integer(2));
-        noteCD.addActionListener(noteButton);
-        
-        noteD = new JButton("D");
-        noteD.setBounds(300, 200, 70, 30);
-        lPane.add(noteD, new Integer(2));
-        noteD.addActionListener(noteButton);
-        
-        noteDE = new JButton("D#/Eb");
-        noteDE.setBounds(400, 200, 70, 30);
-        lPane.add((noteDE), new Integer(2));
-        noteDE.addActionListener(noteButton);
-        
-        noteE = new JButton("E");
-        noteE.setBounds(500, 200, 70, 30);
-        lPane.add(noteE, new Integer(2));
-        noteE.addActionListener(noteButton);
-        
-        noteF = new JButton("F");
-        noteF.setBounds(600, 200, 70, 30);
-        lPane.add(noteF, new Integer(2));
-        noteF.addActionListener(noteButton);
-        
-        noteFG = new JButton("F#/Gb");
-        noteFG.setBounds(100, 260, 70, 30);
-        lPane.add(noteFG, new Integer(2));
-        noteFG.addActionListener(noteButton);
-        
-        noteG = new JButton("G");
-        noteG.setBounds(200, 260, 70, 30);
-        lPane.add(noteG, new Integer(2));
-        noteG.addActionListener(noteButton);
-        
-        noteGA = new JButton("G#/Ab");
-        noteGA.setBounds(300, 260, 70, 30);
-        lPane.add(noteGA, new Integer(2));
-        noteGA.addActionListener(noteButton);
-        
-        noteA = new JButton("A");
-        noteA.setBounds(400, 260, 70, 30);
-        lPane.add(noteA, new Integer(2));
-        noteA.addActionListener(noteButton);
-        
-        noteAB = new JButton("A#/Bb");
-        noteAB.setBounds(500, 260, 70, 30);
-        lPane.add(noteAB, new Integer(2));
-        noteAB.addActionListener(noteButton);
-        
-        noteB = new JButton("B");
-        noteB.setBounds(600, 260, 70, 30);
-        lPane.add(noteB, new Integer(2));
-        noteB.addActionListener(noteButton);
+        noteButtons[0].setBounds(100, 200, 70, 30);
+        noteButtons[1].setBounds(200, 200, 70, 30);
+        noteButtons[2].setBounds(300, 200, 70, 30);
+        noteButtons[3].setBounds(400, 200, 70, 30);
+        noteButtons[4].setBounds(500, 200, 70, 30);
+        noteButtons[5].setBounds(600, 200, 70, 30);
+        noteButtons[6].setBounds(100, 260, 70, 30);
+        noteButtons[7].setBounds(200, 260, 70, 30);
+        noteButtons[8].setBounds(300, 260, 70, 30);
+        noteButtons[9].setBounds(400, 260, 70, 30);
+        noteButtons[10].setBounds(500, 260, 70, 30);
+        noteButtons[11].setBounds(600, 260, 70, 30);
+        randomNote();
+        for(int i = 0; i < 12; i ++){
+            lPane.add(noteButtons[i], new Integer(2));
+        }
+        addALers();
         
         JButton replay = new JButton("Relay");
         replay.setBounds(20, 520, 100, 30);
         lPane.add(replay, new Integer(2));
         replay.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                right = 0;
+                wrong = 0;
                 randomNote();
             }
         });
         randomNote();
-        
-        JLabel points = new JLabel();
+        Font font = new Font(null, Font.PLAIN, 20);
+        createPoints();
+        points.setFont(font);
         points.setBounds(649, 520, 100, 30);
-        points.setOpaque(true);
-        points.setBackground(Color.gray);
         lPane.add(points, new Integer(3));
     }
     
@@ -143,23 +95,105 @@ public class Frame extends JFrame{
         lPane.add(note, new Integer(3));
     }
     
-    public void rightAnswer(){
+    public void rightAnswer() {
         JLabel notif = new JLabel("RIGHT");
         notif.setBounds(335, 350, 100, 30);
         notif.setForeground(Color.green);
         lPane.add(notif, new Integer(2));
-        //Секундный таймер
-        //Стирание надписи
-        //Добавление в счетчик верных ответов
+        //задержка 1 сек
+        //стирание надписи
+        right ++;
+        createPoints();
     }
     
-    public void wrongAnswer(){
+    public void wrongAnswer() {
         JLabel notif = new JLabel("WRONG");
         notif.setBounds(335, 350, 100, 30);
         notif.setForeground(Color.red);
         lPane.add(notif, new Integer(2));
-        //Секундный таймер
-        //Стирание надписи
-        //Добавление в счетчик неверных ответов
+        //задержка 1 сек
+        //стирание надписи
+        wrong ++;
+        createPoints();
+    }
+    
+    public void createPoints(){
+        String pnts = right + "/" + wrong + "/20";
+        points.setText(pnts);
+    }
+    
+    public void addALers(){
+        noteButtons[0].addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if(noteButtons[0].getText() == notes.getNotes()[string][fret].getName()){
+                    rightAnswer();} else{
+                    wrongAnswer();}
+                randomNote();}});
+        noteButtons[1].addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if(noteButtons[1].getText() == notes.getNotes()[string][fret].getName()){
+                    rightAnswer();} else{
+                    wrongAnswer();}
+                randomNote();}});
+        noteButtons[2].addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if(noteButtons[2].getText() == notes.getNotes()[string][fret].getName()){
+                    rightAnswer();} else{
+                    wrongAnswer();}
+                randomNote();}});
+        noteButtons[3].addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if(noteButtons[3].getText() == notes.getNotes()[string][fret].getName()){
+                    rightAnswer();} else{
+                    wrongAnswer();}
+                randomNote();}});
+        noteButtons[4].addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if(noteButtons[4].getText() == notes.getNotes()[string][fret].getName()){
+                    rightAnswer();} else{
+                    wrongAnswer();}
+                randomNote();}});
+        noteButtons[5].addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if(noteButtons[5].getText() == notes.getNotes()[string][fret].getName()){
+                    rightAnswer();} else{
+                    wrongAnswer();}
+                randomNote();}});
+        noteButtons[6].addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if(noteButtons[6].getText() == notes.getNotes()[string][fret].getName()){
+                    rightAnswer();} else{
+                    wrongAnswer();}
+                randomNote();}});
+        noteButtons[7].addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if(noteButtons[7].getText() == notes.getNotes()[string][fret].getName()){
+                    rightAnswer();} else{
+                    wrongAnswer();}
+                randomNote();}});
+        noteButtons[8].addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if(noteButtons[8].getText() == notes.getNotes()[string][fret].getName()){
+                    rightAnswer();} else{
+                    wrongAnswer();}
+                randomNote();}});
+        noteButtons[9].addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if(noteButtons[9].getText() == notes.getNotes()[string][fret].getName()){
+                    rightAnswer();} else{
+                    wrongAnswer();}
+                randomNote();}});
+        noteButtons[10].addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if(noteButtons[10].getText() == notes.getNotes()[string][fret].getName()){
+                    rightAnswer();} else{
+                    wrongAnswer();}
+                randomNote();}});
+        noteButtons[11].addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if(noteButtons[11].getText() == notes.getNotes()[string][fret].getName()){
+                    rightAnswer();} else{
+                    wrongAnswer();}
+                randomNote();}});
     }
 }
