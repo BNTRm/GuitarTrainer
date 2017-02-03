@@ -22,7 +22,7 @@ public class Frame extends JFrame{
     private JLayeredPane lPane;
     private int string, fret, right, wrong;
     private ImageIcon tap = new ImageIcon("tap.png");
-    private JLabel notif = new JLabel(), points = new JLabel(), note = new JLabel(tap);
+    private JLabel points = new JLabel(), note = new JLabel(tap);
     private JButton play, noteButtons[] = {
         new JButton("C"), new JButton("C#/Db"), new JButton("D"),
         new JButton("D#/Eb"), new JButton("E"), new JButton("F"),
@@ -42,6 +42,17 @@ public class Frame extends JFrame{
         fretboard.setBounds(0, 0, 769, 200);
         lPane.add(fretboard, new Integer(2));
         
+        setButtons();
+        
+        stopTrain();
+        
+        points.setFont(new Font(null, Font.PLAIN, 20));
+        points.setBounds(649, 520, 100, 30);
+        lPane.add(points, new Integer(3));
+        createPoints();
+    }
+    
+    public void setButtons(){
         noteButtons[0].setBounds(100, 200, 70, 30);
         noteButtons[1].setBounds(200, 200, 70, 30);
         noteButtons[2].setBounds(300, 200, 70, 30);
@@ -69,13 +80,6 @@ public class Frame extends JFrame{
                 randomNote();
             }
         });
-        stopTrain();
-        Font font = new Font(null, Font.PLAIN, 20);
-        notif.setFont(font);
-        points.setFont(font);
-        points.setBounds(649, 520, 100, 30);
-        lPane.add(points, new Integer(3));
-        createPoints();
     }
     
     public void randomNote(){
@@ -101,13 +105,7 @@ public class Frame extends JFrame{
     public void rightAnswer() {
         ImageIcon Rtap = new ImageIcon("Rtap.png");
         note.setIcon(Rtap);
-        new java.util.Timer().schedule(
-            new TimerTask() {
-                public void run() {
-                    note.setIcon(tap);
-                    randomNote();
-                }
-            }, 300 );
+        answerTimer();
         right += 1;
         createPoints();
     }
@@ -115,15 +113,21 @@ public class Frame extends JFrame{
     public void wrongAnswer() {
         ImageIcon Wtap = new ImageIcon("Wtap.png");
         note.setIcon(Wtap);
+        answerTimer();
+        wrong += 1;
+        createPoints();
+    }
+    
+    public void answerTimer(){
+        buttonsOff();
         new java.util.Timer().schedule(
             new TimerTask() {
                 public void run() {
                     note.setIcon(tap);
+                    buttonsOn();
                     randomNote();
                 }
-            }, 300 );
-        wrong += 1;
-        createPoints();
+            }, 500 );
     }
     
     public void createPoints(){
@@ -133,81 +137,40 @@ public class Frame extends JFrame{
     }
         
     public void stopTrain(){
-        for(int i = 0; i < 12; i ++){
-            noteButtons[i].setEnabled(false);
-        }
+        buttonsOff();
         play.setText("Play");
         lPane.remove(note);
         lPane.repaint();
     }
     
     public void startTrain(){
-        for(int i = 0; i < 12; i ++){
-            noteButtons[i].setEnabled(true);
-        }
+        buttonsOn();
         play.setText("Replay");
     }
     
+    public void buttonsOn(){
+        for(int i = 0; i < 12; i ++){
+            noteButtons[i].setEnabled(true);
+        }
+    }
+    
+    public void buttonsOff(){
+        for(int i = 0; i < 12; i ++){
+            noteButtons[i].setEnabled(false);
+        }
+    }
+    
     public void addActionListeners(){
-        noteButtons[0].addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if(noteButtons[0].getText() == notes.getNotes()[string][fret].getName()){
-                    rightAnswer();} else{
-                    wrongAnswer();}}});
-        noteButtons[1].addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if(noteButtons[1].getText() == notes.getNotes()[string][fret].getName()){
-                    rightAnswer();} else{
-                    wrongAnswer();}}});
-        noteButtons[2].addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if(noteButtons[2].getText() == notes.getNotes()[string][fret].getName()){
-                    rightAnswer();} else{
-                    wrongAnswer();}}});
-        noteButtons[3].addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if(noteButtons[3].getText() == notes.getNotes()[string][fret].getName()){
-                    rightAnswer();} else{
-                    wrongAnswer();}}});
-        noteButtons[4].addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if(noteButtons[4].getText() == notes.getNotes()[string][fret].getName()){
-                    rightAnswer();} else{
-                    wrongAnswer();}}});
-        noteButtons[5].addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if(noteButtons[5].getText() == notes.getNotes()[string][fret].getName()){
-                    rightAnswer();} else{
-                    wrongAnswer();}}});
-        noteButtons[6].addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if(noteButtons[6].getText() == notes.getNotes()[string][fret].getName()){
-                    rightAnswer();} else{
-                    wrongAnswer();}}});
-        noteButtons[7].addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if(noteButtons[7].getText() == notes.getNotes()[string][fret].getName()){
-                    rightAnswer();} else{
-                    wrongAnswer();}}});
-        noteButtons[8].addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if(noteButtons[8].getText() == notes.getNotes()[string][fret].getName()){
-                    rightAnswer();} else{
-                    wrongAnswer();}}});
-        noteButtons[9].addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if(noteButtons[9].getText() == notes.getNotes()[string][fret].getName()){
-                    rightAnswer();} else{
-                    wrongAnswer();}}});
-        noteButtons[10].addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if(noteButtons[10].getText() == notes.getNotes()[string][fret].getName()){
-                    rightAnswer();} else{
-                    wrongAnswer();}}});
-        noteButtons[11].addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if(noteButtons[11].getText() == notes.getNotes()[string][fret].getName()){
-                    rightAnswer();} else{
-                    wrongAnswer();}}});
+        for(int i = 0; i < 12; i ++){
+            noteButtons[i].addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    if(((JButton)e.getSource()).getText() == notes.getNotes()[string][fret].getName()){
+                        rightAnswer();
+                    } else{
+                        wrongAnswer();
+                    }
+                }
+            });
+        }
     }
 }
