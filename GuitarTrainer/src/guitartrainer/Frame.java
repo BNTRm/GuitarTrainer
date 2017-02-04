@@ -16,11 +16,15 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import java.util.Timer;
 
 public class Frame extends JFrame{
     private Notes notes = new Notes();
     private JLayeredPane lPane;
-    private int string, fret, right, wrong;
+    private int string, fret, right, wrong, goal = 25;
     private ImageIcon tap = new ImageIcon("tap.png");
     private JLabel points = new JLabel(), note = new JLabel(tap);
     private JButton play, noteButtons[] = {
@@ -28,6 +32,8 @@ public class Frame extends JFrame{
         new JButton("D#/Eb"), new JButton("E"), new JButton("F"),
         new JButton("F#/Gb"), new JButton("G"), new JButton("G#/Ab"),
         new JButton("A"), new JButton("A#/Bb"), new JButton("B")};
+    private JMenuBar menuBar;
+    private JMenu goalMenu, timerMenu;
     
     Frame(){
         super("GuitarTrainer v0.1");
@@ -74,12 +80,81 @@ public class Frame extends JFrame{
         lPane.add(play, new Integer(2));
         play.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                right = wrong = 0;
-                createPoints();
-                startTrain();
-                randomNote();
+                if(((JButton)e.getSource()).getText() == "Play"){
+                    right = wrong = 0;
+                    createPoints();
+                    startTrain();
+                    randomNote();
+                } else if(((JButton)e.getSource()).getText() == "Stop"){
+                    stopTrain();
+                }
             }
         });
+        
+        menuBar = new JMenuBar();
+        this.setJMenuBar(menuBar);
+        
+        addTimerMenu();
+        addGoalMenu();
+        
+    }
+    
+    public void addTimerMenu(){
+        timerMenu = new JMenu("Timer");
+        JMenuItem noneTimer = new JMenuItem("None");
+        JMenuItem timer15sec = new JMenuItem("15 seconds");
+        JMenuItem timer30sec = new JMenuItem("30 seconds");
+        JMenuItem timer45sec = new JMenuItem("45 seconds");
+        JMenuItem timer1min = new JMenuItem("1 minute");
+        JMenuItem timer2min = new JMenuItem("2 minute");
+        timerMenu.add(timer15sec);
+        timerMenu.add(timer30sec);
+        timerMenu.add(timer45sec);
+        timerMenu.add(timer1min);
+        timerMenu.add(timer2min);
+        menuBar.add(timerMenu);
+    }
+    
+    public void addGoalMenu(){
+        goalMenu = new JMenu("Goal");
+        JMenuItem noneGoal = new JMenuItem("None");
+        JMenuItem goal10 = new JMenuItem("10");
+        JMenuItem goal25 = new JMenuItem("25");
+        JMenuItem goal50 = new JMenuItem("50");
+        JMenuItem goal75 = new JMenuItem("75");
+        JMenuItem goal100 = new JMenuItem("100");
+        goalMenu.add(noneGoal);
+        goalMenu.add(goal10);
+        goalMenu.add(goal25);
+        goalMenu.add(goal50);
+        goalMenu.add(goal75);
+        goalMenu.add(goal100);
+        noneGoal.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                goal = -1;
+                createPoints();}});
+        goal10.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                goal = 10;
+                createPoints();}});
+        goal25.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                goal = 25;
+                createPoints();}});
+        goal50.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                goal = 50;
+                createPoints();}});
+        goal75.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                goal = 75;
+                createPoints();}});
+        goal100.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                goal = 100;
+                createPoints();}});
+        
+        menuBar.add(goalMenu);
     }
     
     public void randomNote(){
@@ -97,7 +172,7 @@ public class Frame extends JFrame{
         note.setBounds(notes.getNotes()[string][fret].getX(),
                 notes.getNotes()[string][fret].getY(), 15, 15);
         lPane.add(note, new Integer(3));
-        if((wrong + right) == 20){
+        if((wrong + right) == goal){
             stopTrain();
         }
     }
@@ -120,7 +195,7 @@ public class Frame extends JFrame{
     
     public void answerTimer(){
         buttonsOff();
-        new java.util.Timer().schedule(
+        new Timer().schedule(
             new TimerTask() {
                 public void run() {
                     note.setIcon(tap);
@@ -131,7 +206,12 @@ public class Frame extends JFrame{
     }
     
     public void createPoints(){
-        String pnts = right + "/" + wrong + "/20";
+        String pnts;
+        if(goal == -1){
+            pnts = right + "/" + wrong;
+        } else{
+            pnts = right + "/" + wrong + "/" + goal;
+        }
         points.setText(pnts);
         points.repaint();
     }
@@ -141,11 +221,14 @@ public class Frame extends JFrame{
         play.setText("Play");
         lPane.remove(note);
         lPane.repaint();
+        goalMenu.setEnabled(true);
     }
     
     public void startTrain(){
         buttonsOn();
-        play.setText("Replay");
+        play.setText("Stop");
+        goalMenu.setEnabled(false);
+        
     }
     
     public void buttonsOn(){

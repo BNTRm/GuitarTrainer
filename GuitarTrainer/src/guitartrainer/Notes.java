@@ -101,6 +101,7 @@ public class Notes {
                     case 10:{notes[i][j].setX(679); break;}
                     case 11:{notes[i][j].setX(729); break;}
                 }
+                notes[i][j].setSound(i, j);
             }
         }
     }
