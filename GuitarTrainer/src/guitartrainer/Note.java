@@ -3,25 +3,28 @@ package guitartrainer;
 import java.io.File;
 
 public class Note {
-    private String name;
-    private int x, y;
+    private int x, y, id;
     private File soundFile;
     
     public Note(){
-        name = "";
+        id = -1;
     }
     
-    public Note(String nName){
-        name = nName;
+    public Note(int newId){
+        id = newId;
     }
     
     public void setSound(int i, int j){
-        String soundFN = "sound" + i + j;
+        String soundFN = "sound" + i + j + ".wav";
         soundFile = new File(soundFN);
     }
     
-    public void setName(String newName){
-        name = newName;
+    public File getSoundFile(){
+        return soundFile;
+    }
+    
+    public void setName(int newId){
+        id = newId;
     }
     
     public void setX(int newX){
@@ -32,8 +35,8 @@ public class Note {
         y = newY;
     }
     
-    public String getName(){
-        return name;
+    public int getId(){
+        return id;
     }
     
     public int getX(){

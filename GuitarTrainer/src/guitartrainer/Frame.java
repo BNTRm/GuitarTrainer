@@ -1,15 +1,11 @@
 package guitartrainer;
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -20,6 +16,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import java.util.Timer;
+import javax.sound.sampled.AudioInputStream;
 
 public class Frame extends JFrame{
     private Notes notes = new Notes();
@@ -27,11 +24,12 @@ public class Frame extends JFrame{
     private int string, fret, right, wrong, goal = 25;
     private ImageIcon tap = new ImageIcon("tap.png");
     private JLabel points = new JLabel(), note = new JLabel(tap);
-    private JButton play, noteButtons[] = {
-        new JButton("C"), new JButton("C#/Db"), new JButton("D"),
-        new JButton("D#/Eb"), new JButton("E"), new JButton("F"),
-        new JButton("F#/Gb"), new JButton("G"), new JButton("G#/Ab"),
-        new JButton("A"), new JButton("A#/Bb"), new JButton("B")};
+    private JButton play;
+    private MyButton noteButtons[] = {
+        new MyButton(7), new MyButton(8), new MyButton(9),
+        new MyButton(10), new MyButton(11), new MyButton(0),
+        new MyButton(1), new MyButton(2), new MyButton(3),
+        new MyButton(4), new MyButton(5), new MyButton(6)};
     private JMenuBar menuBar;
     private JMenu goalMenu, timerMenu;
     
@@ -42,7 +40,6 @@ public class Frame extends JFrame{
         setResizable(false);
         
         lPane = getLayeredPane();
-        
         ImageIcon grif = new ImageIcon("grif.png");
         JLabel fretboard = new JLabel(grif);
         fretboard.setBounds(0, 0, 769, 200);
@@ -247,7 +244,7 @@ public class Frame extends JFrame{
         for(int i = 0; i < 12; i ++){
             noteButtons[i].addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    if(((JButton)e.getSource()).getText() == notes.getNotes()[string][fret].getName()){
+                    if(((MyButton)e.getSource()).getId() == notes.getNotes()[string][fret].getId()){
                         rightAnswer();
                     } else{
                         wrongAnswer();
