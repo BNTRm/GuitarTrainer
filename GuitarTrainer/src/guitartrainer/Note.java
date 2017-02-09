@@ -15,7 +15,7 @@ public class Note {
     }
     
     public void setSound(int i, int j){
-        String soundFN = "sound" + i + j + ".wav";
+        String soundFN = "sounds\\sound" + i + "_" + j + ".wav";
         soundFile = new File(soundFN);
     }
     

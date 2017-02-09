@@ -3,6 +3,8 @@ package guitartrainer;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -17,6 +19,10 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import java.util.Timer;
 import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Frame extends JFrame{
     private Notes notes = new Notes();
@@ -53,6 +59,19 @@ public class Frame extends JFrame{
         points.setBounds(649, 520, 100, 30);
         lPane.add(points, new Integer(3));
         createPoints();
+    }
+    
+    public void playSound(){
+        try{
+            AudioInputStream ais = AudioSystem.getAudioInputStream(
+                    notes.getNotes()[string][fret].getSoundFile());
+            Clip clip = AudioSystem.getClip();
+            clip.open(ais);
+            clip.setFramePosition(0);
+            clip.start();
+        } catch (IOException | UnsupportedAudioFileException | LineUnavailableException exc) {
+            exc.printStackTrace();
+        }
     }
     
     public void setButtons(){
@@ -169,6 +188,7 @@ public class Frame extends JFrame{
         note.setBounds(notes.getNotes()[string][fret].getX(),
                 notes.getNotes()[string][fret].getY(), 15, 15);
         lPane.add(note, new Integer(3));
+        playSound();
         if((wrong + right) == goal){
             stopTrain();
         }

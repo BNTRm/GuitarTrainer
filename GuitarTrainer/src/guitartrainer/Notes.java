@@ -79,6 +79,7 @@ public class Notes {
         
         for(int i = 0; i < 6; i ++){
             for(int j = 0; j < 12; j ++){
+                notes[i][j].setSound(i, j);
                 switch(i){
                     case 0: {notes[i][j].setY(45); break;}
                     case 1: {notes[i][j].setY(62); break;}
