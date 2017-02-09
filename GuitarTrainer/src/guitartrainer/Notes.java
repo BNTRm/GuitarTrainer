@@ -1,5 +1,9 @@
 package guitartrainer;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+
 public class Notes {
     private Note[][] notes = new Note[6][12];
     
@@ -102,12 +106,15 @@ public class Notes {
                     case 10:{notes[i][j].setX(679); break;}
                     case 11:{notes[i][j].setX(729); break;}
                 }
-                notes[i][j].setSound(i, j);
             }
         }
     }
     
     public Note[][] getNotes(){
         return notes;
+    }
+    
+    public void playSound(int i, int j){
+        notes[i][j].playSound();
     }
 }

@@ -31,7 +31,7 @@ public class Frame extends JFrame{
     private int string, fret, right, wrong, goal = -1;
     private ImageIcon tap = new ImageIcon("tap.png");
     private JLabel points = new JLabel();
-    private JButton play, note = new JButton();
+    private JButton play,  note = new JButton();
     private MyButton noteButtons[] = {
         new MyButton(7), new MyButton(8), new MyButton(9),
         new MyButton(10), new MyButton(11), new MyButton(0),
@@ -58,25 +58,12 @@ public class Frame extends JFrame{
         
         note.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                playSound();}});
+                notes.playSound(string, fret);}});
         
         points.setFont(new Font(null, Font.PLAIN, 20));
         points.setBounds(649, 520, 100, 30);
         lPane.add(points, new Integer(3));
         createPoints();
-    }
-    
-    public void playSound(){
-        try{
-            AudioInputStream ais = AudioSystem.getAudioInputStream(
-                    notes.getNotes()[string][fret].getSoundFile());
-            Clip clip = AudioSystem.getClip();
-            clip.open(ais);
-            clip.setFramePosition(0);
-            clip.start();
-        } catch (IOException | UnsupportedAudioFileException | LineUnavailableException exc) {
-            exc.printStackTrace();
-        }
     }
     
     public void setButtons(){
@@ -100,6 +87,7 @@ public class Frame extends JFrame{
         play = new JButton("Play");
         play.setBounds(20, 520, 100, 30);
         lPane.add(play, new Integer(2));
+        play.setBackground(Color.LIGHT_GRAY);
         play.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if(((JButton)e.getSource()).getText() == "Play"){
@@ -115,9 +103,10 @@ public class Frame extends JFrame{
         
         menuBar = new JMenuBar();
         this.setJMenuBar(menuBar);
+        menuBar.setBackground(Color.LIGHT_GRAY);
         
-        //addTimerMenu();
         addGoalMenu();
+        //addTimerMenu();
         
     }
     /*
@@ -194,7 +183,7 @@ public class Frame extends JFrame{
         note.setBounds(notes.getNotes()[string][fret].getX(),
                 notes.getNotes()[string][fret].getY(), 15, 15);
         lPane.add(note, new Integer(3));
-        playSound();
+        notes.playSound(string, fret);
         note.setBackground(Color.cyan);
         if((wrong + right) == goal){
             stopTrain();

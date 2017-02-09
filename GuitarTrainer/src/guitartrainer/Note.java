@@ -1,6 +1,12 @@
 package guitartrainer;
 
 import java.io.File;
+import java.io.IOException;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Note {
     private int x, y, id;
@@ -45,5 +51,17 @@ public class Note {
     
     public int getY(){
         return y;
+    }
+    
+    public void playSound(){
+        try{
+            AudioInputStream ais = AudioSystem.getAudioInputStream(soundFile);
+            Clip clip = AudioSystem.getClip();
+            clip.open(ais);
+            clip.setFramePosition(0);
+            clip.start();
+        } catch (IOException | UnsupportedAudioFileException | LineUnavailableException exc) {
+            exc.printStackTrace();
+        }
     }
 }
