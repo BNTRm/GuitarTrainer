@@ -1,5 +1,6 @@
 package guitartrainer;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,10 +28,10 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 public class Frame extends JFrame{
     private Notes notes = new Notes();
     private JLayeredPane lPane;
-    private int string, fret, right, wrong, goal = 25;
+    private int string, fret, right, wrong, goal = -1;
     private ImageIcon tap = new ImageIcon("tap.png");
-    private JLabel points = new JLabel(), note = new JLabel(tap);
-    private JButton play;
+    private JLabel points = new JLabel();
+    private JButton play, note = new JButton();
     private MyButton noteButtons[] = {
         new MyButton(7), new MyButton(8), new MyButton(9),
         new MyButton(10), new MyButton(11), new MyButton(0),
@@ -54,6 +55,10 @@ public class Frame extends JFrame{
         setButtons();
         
         stopTrain();
+        
+        note.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                playSound();}});
         
         points.setFont(new Font(null, Font.PLAIN, 20));
         points.setBounds(649, 520, 100, 30);
@@ -89,6 +94,7 @@ public class Frame extends JFrame{
         noteButtons[11].setBounds(600, 260, 70, 30);
         for(int i = 0; i < 12; i ++){
             lPane.add(noteButtons[i], new Integer(2));
+            noteButtons[i].setBackground(Color.white);
         }
         addActionListeners();
         play = new JButton("Play");
@@ -110,11 +116,11 @@ public class Frame extends JFrame{
         menuBar = new JMenuBar();
         this.setJMenuBar(menuBar);
         
-        addTimerMenu();
+        //addTimerMenu();
         addGoalMenu();
         
     }
-    
+    /*
     public void addTimerMenu(){
         timerMenu = new JMenu("Timer");
         JMenuItem noneTimer = new JMenuItem("None");
@@ -130,7 +136,7 @@ public class Frame extends JFrame{
         timerMenu.add(timer2min);
         menuBar.add(timerMenu);
     }
-    
+    */
     public void addGoalMenu(){
         goalMenu = new JMenu("Goal");
         JMenuItem noneGoal = new JMenuItem("None");
@@ -189,6 +195,7 @@ public class Frame extends JFrame{
                 notes.getNotes()[string][fret].getY(), 15, 15);
         lPane.add(note, new Integer(3));
         playSound();
+        note.setBackground(Color.cyan);
         if((wrong + right) == goal){
             stopTrain();
         }
@@ -196,30 +203,29 @@ public class Frame extends JFrame{
     
     public void rightAnswer() {
         ImageIcon Rtap = new ImageIcon("Rtap.png");
-        note.setIcon(Rtap);
-        answerTimer();
+        note.setBackground(Color.green);
+        answerTimer(250);
         right += 1;
         createPoints();
     }
     
     public void wrongAnswer() {
         ImageIcon Wtap = new ImageIcon("Wtap.png");
-        note.setIcon(Wtap);
-        answerTimer();
+        note.setBackground(Color.red);
+        answerTimer(750);
         wrong += 1;
         createPoints();
     }
     
-    public void answerTimer(){
+    public void answerTimer(int time){
         buttonsOff();
         new Timer().schedule(
             new TimerTask() {
                 public void run() {
-                    note.setIcon(tap);
                     buttonsOn();
                     randomNote();
                 }
-            }, 500 );
+            }, time );
     }
     
     public void createPoints(){
@@ -266,8 +272,22 @@ public class Frame extends JFrame{
                 public void actionPerformed(ActionEvent e) {
                     if(((MyButton)e.getSource()).getId() == notes.getNotes()[string][fret].getId()){
                         rightAnswer();
+                        ((MyButton)e.getSource()).setBackground(Color.green);
+                        new Timer().schedule(
+                            new TimerTask() {
+                                public void run() {
+                                    ((MyButton)e.getSource()).setBackground(Color.WHITE);
+                                }
+                            }, 250 );
                     } else{
                         wrongAnswer();
+                        ((MyButton)e.getSource()).setBackground(Color.red);
+                        new Timer().schedule(
+                            new TimerTask() {
+                                public void run() {
+                                    ((MyButton)e.getSource()).setBackground(Color.WHITE);
+                                }
+                            }, 750 );
                     }
                 }
             });
