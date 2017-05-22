@@ -81,13 +81,12 @@ public class Frame extends JFrame{
         noteButtons[11].setBounds(600, 260, 70, 30);
         for(int i = 0; i < 12; i ++){
             lPane.add(noteButtons[i], new Integer(2));
-            noteButtons[i].setBackground(Color.white);
+            noteButtons[i].setBackground(new Color(240, 240, 255));
         }
         addActionListeners();
         play = new JButton("Play");
         play.setBounds(20, 520, 100, 30);
         lPane.add(play, new Integer(2));
-        play.setBackground(Color.LIGHT_GRAY);
         play.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if(((JButton)e.getSource()).getText() == "Play"){
@@ -103,7 +102,7 @@ public class Frame extends JFrame{
         
         menuBar = new JMenuBar();
         this.setJMenuBar(menuBar);
-        menuBar.setBackground(Color.LIGHT_GRAY);
+        menuBar.setBackground(new Color(225, 225, 225));
         
         addGoalMenu();
         //addTimerMenu();
@@ -184,7 +183,7 @@ public class Frame extends JFrame{
                 notes.getNotes()[string][fret].getY(), 15, 15);
         lPane.add(note, new Integer(3));
         notes.playSound(string, fret);
-        note.setBackground(Color.cyan);
+        note.setBackground(Color.WHITE);
         if((wrong + right) == goal){
             stopTrain();
         }
@@ -192,7 +191,7 @@ public class Frame extends JFrame{
     
     public void rightAnswer() {
         ImageIcon Rtap = new ImageIcon("Rtap.png");
-        note.setBackground(Color.green);
+        note.setBackground(new Color(120, 255, 120));
         answerTimer(250);
         right += 1;
         createPoints();
@@ -200,7 +199,7 @@ public class Frame extends JFrame{
     
     public void wrongAnswer() {
         ImageIcon Wtap = new ImageIcon("Wtap.png");
-        note.setBackground(Color.red);
+        note.setBackground(new Color(255, 120, 120));
         answerTimer(750);
         wrong += 1;
         createPoints();
@@ -231,6 +230,7 @@ public class Frame extends JFrame{
     public void stopTrain(){
         buttonsOff();
         play.setText("Play");
+        play.setBackground(new Color(230, 255, 230));
         lPane.remove(note);
         lPane.repaint();
         goalMenu.setEnabled(true);
@@ -239,6 +239,7 @@ public class Frame extends JFrame{
     public void startTrain(){
         buttonsOn();
         play.setText("Stop");
+        play.setBackground(new Color(255, 230, 230));
         goalMenu.setEnabled(false);
         
     }
@@ -259,22 +260,23 @@ public class Frame extends JFrame{
         for(int i = 0; i < 12; i ++){
             noteButtons[i].addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    if(((MyButton)e.getSource()).getId() == notes.getNotes()[string][fret].getId()){
+                    final MyButton b = (MyButton)e.getSource();
+                    if(b.getId() == notes.getNotes()[string][fret].getId()){
                         rightAnswer();
-                        ((MyButton)e.getSource()).setBackground(Color.green);
+                        b.setBackground(new Color(120, 255, 120));
                         new Timer().schedule(
                             new TimerTask() {
                                 public void run() {
-                                    ((MyButton)e.getSource()).setBackground(Color.WHITE);
+                                    b.setBackground(new Color(240, 240, 255));
                                 }
                             }, 250 );
                     } else{
                         wrongAnswer();
-                        ((MyButton)e.getSource()).setBackground(Color.red);
+                        b.setBackground(new Color(255, 120, 120));
                         new Timer().schedule(
                             new TimerTask() {
                                 public void run() {
-                                    ((MyButton)e.getSource()).setBackground(Color.WHITE);
+                                    b.setBackground(new Color(240, 240, 255));
                                 }
                             }, 750 );
                     }
