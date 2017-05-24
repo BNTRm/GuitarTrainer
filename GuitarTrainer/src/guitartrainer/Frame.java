@@ -4,12 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 import java.util.Random;
 import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,30 +15,30 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import java.util.Timer;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.ButtonGroup;
+import javax.swing.JRadioButtonMenuItem;
 
 public class Frame extends JFrame{
+    
     private Notes notes = new Notes();
     private JLayeredPane lPane;
     private int string, fret, right, wrong, goal = -1;
     private ImageIcon tap = new ImageIcon("tap.png");
     private JLabel points = new JLabel();
     private JButton play,  note = new JButton();
-    private MyButton noteButtons[] = {
+    private MyButton noteBtns[] = {
         new MyButton(7), new MyButton(8), new MyButton(9),
         new MyButton(10), new MyButton(11), new MyButton(0),
         new MyButton(1), new MyButton(2), new MyButton(3),
         new MyButton(4), new MyButton(5), new MyButton(6)};
     private JMenuBar menuBar;
-    private JMenu goalMenu, timerMenu;
+    private JMenu goalMenu/*, timerMenu*/;
+    private TimerLabel timerLabel = new TimerLabel();
     
-    Frame(){
+    public Frame(){
+        
         super("GuitarTrainer v0.1");
-        setBounds(100, 100, 774, 600);
+        setBounds(300, 100, 774, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         
@@ -61,27 +57,32 @@ public class Frame extends JFrame{
                 notes.playSound(string, fret);}});
         
         points.setFont(new Font(null, Font.PLAIN, 20));
-        points.setBounds(649, 520, 100, 30);
+        points.setBounds(650, 520, 100, 30);
         lPane.add(points, new Integer(3));
         createPoints();
+        
+        timerLabel.setFont(new Font(timerLabel.getFont().getFontName(), timerLabel.getFont().getStyle(), 24));
+        timerLabel.setBounds(355, 525, 60, 20);
+        lPane.add(timerLabel, new Integer(2));
     }
     
     public void setButtons(){
-        noteButtons[0].setBounds(100, 200, 70, 30);
-        noteButtons[1].setBounds(200, 200, 70, 30);
-        noteButtons[2].setBounds(300, 200, 70, 30);
-        noteButtons[3].setBounds(400, 200, 70, 30);
-        noteButtons[4].setBounds(500, 200, 70, 30);
-        noteButtons[5].setBounds(600, 200, 70, 30);
-        noteButtons[6].setBounds(100, 260, 70, 30);
-        noteButtons[7].setBounds(200, 260, 70, 30);
-        noteButtons[8].setBounds(300, 260, 70, 30);
-        noteButtons[9].setBounds(400, 260, 70, 30);
-        noteButtons[10].setBounds(500, 260, 70, 30);
-        noteButtons[11].setBounds(600, 260, 70, 30);
+        
+        noteBtns[0].setBounds(100, 200, 70, 30);
+        noteBtns[1].setBounds(200, 200, 70, 30);
+        noteBtns[2].setBounds(300, 200, 70, 30);
+        noteBtns[3].setBounds(400, 200, 70, 30);
+        noteBtns[4].setBounds(500, 200, 70, 30);
+        noteBtns[5].setBounds(600, 200, 70, 30);
+        noteBtns[6].setBounds(100, 260, 70, 30);
+        noteBtns[7].setBounds(200, 260, 70, 30);
+        noteBtns[8].setBounds(300, 260, 70, 30);
+        noteBtns[9].setBounds(400, 260, 70, 30);
+        noteBtns[10].setBounds(500, 260, 70, 30);
+        noteBtns[11].setBounds(600, 260, 70, 30);
         for(int i = 0; i < 12; i ++){
-            lPane.add(noteButtons[i], new Integer(2));
-            noteButtons[i].setBackground(new Color(240, 240, 255));
+            lPane.add(noteBtns[i], new Integer(2));
+            noteBtns[i].setBackground(new Color(240, 240, 255));
         }
         addActionListeners();
         play = new JButton("Play");
@@ -110,6 +111,7 @@ public class Frame extends JFrame{
     }
     /*
     public void addTimerMenu(){
+    
         timerMenu = new JMenu("Timer");
         JMenuItem noneTimer = new JMenuItem("None");
         JMenuItem timer15sec = new JMenuItem("15 seconds");
@@ -126,19 +128,28 @@ public class Frame extends JFrame{
     }
     */
     public void addGoalMenu(){
+        
         goalMenu = new JMenu("Goal");
-        JMenuItem noneGoal = new JMenuItem("None");
-        JMenuItem goal10 = new JMenuItem("10");
-        JMenuItem goal25 = new JMenuItem("25");
-        JMenuItem goal50 = new JMenuItem("50");
-        JMenuItem goal75 = new JMenuItem("75");
-        JMenuItem goal100 = new JMenuItem("100");
+        JRadioButtonMenuItem noneGoal = new JRadioButtonMenuItem("None");
+        JRadioButtonMenuItem goal10 = new JRadioButtonMenuItem("10");
+        JRadioButtonMenuItem goal25 = new JRadioButtonMenuItem("25");
+        JRadioButtonMenuItem goal50 = new JRadioButtonMenuItem("50");
+        JRadioButtonMenuItem goal75 = new JRadioButtonMenuItem("75");
+        JRadioButtonMenuItem goal100 = new JRadioButtonMenuItem("100");
+        ButtonGroup bg = new ButtonGroup();
+        bg.add(noneGoal);
+        bg.add(goal10);
+        bg.add(goal25);
+        bg.add(goal50);
+        bg.add(goal75);
+        bg.add(goal100);
         goalMenu.add(noneGoal);
         goalMenu.add(goal10);
         goalMenu.add(goal25);
         goalMenu.add(goal50);
         goalMenu.add(goal75);
         goalMenu.add(goal100);
+        bg.setSelected(noneGoal.getModel(), true);
         noneGoal.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 goal = -1;
@@ -168,6 +179,7 @@ public class Frame extends JFrame{
     }
     
     public void randomNote(){
+        
         lPane.remove(note);
         lPane.repaint();
         Random r = new Random(System.currentTimeMillis());
@@ -190,6 +202,7 @@ public class Frame extends JFrame{
     }
     
     public void rightAnswer() {
+        
         ImageIcon Rtap = new ImageIcon("Rtap.png");
         note.setBackground(new Color(120, 255, 120));
         answerTimer(250);
@@ -198,6 +211,7 @@ public class Frame extends JFrame{
     }
     
     public void wrongAnswer() {
+        
         ImageIcon Wtap = new ImageIcon("Wtap.png");
         note.setBackground(new Color(255, 120, 120));
         answerTimer(750);
@@ -206,6 +220,7 @@ public class Frame extends JFrame{
     }
     
     public void answerTimer(int time){
+        
         buttonsOff();
         new Timer().schedule(
             new TimerTask() {
@@ -217,6 +232,7 @@ public class Frame extends JFrame{
     }
     
     public void createPoints(){
+        
         String pnts;
         if(goal == -1){
             pnts = right + "/" + wrong;
@@ -228,6 +244,8 @@ public class Frame extends JFrame{
     }
         
     public void stopTrain(){
+        
+        timerLabel.stopTimer();
         buttonsOff();
         play.setText("Play");
         play.setBackground(new Color(230, 255, 230));
@@ -237,6 +255,8 @@ public class Frame extends JFrame{
     }
     
     public void startTrain(){
+        
+        timerLabel.restartTimer();
         buttonsOn();
         play.setText("Stop");
         play.setBackground(new Color(255, 230, 230));
@@ -245,28 +265,35 @@ public class Frame extends JFrame{
     }
     
     public void buttonsOn(){
+        
         for(int i = 0; i < 12; i ++){
-            noteButtons[i].setEnabled(true);
+            noteBtns[i].setEnabled(true);
         }
     }
     
     public void buttonsOff(){
+        
         for(int i = 0; i < 12; i ++){
-            noteButtons[i].setEnabled(false);
+            noteBtns[i].setEnabled(false);
         }
     }
     
     public void addActionListeners(){
+        
         for(int i = 0; i < 12; i ++){
-            noteButtons[i].addActionListener(new ActionListener() {
+            noteBtns[i].addActionListener(new ActionListener() {
+                
                 public void actionPerformed(ActionEvent e) {
+                    
                     final MyButton b = (MyButton)e.getSource();
                     if(b.getId() == notes.getNotes()[string][fret].getId()){
                         rightAnswer();
                         b.setBackground(new Color(120, 255, 120));
                         new Timer().schedule(
                             new TimerTask() {
+                                
                                 public void run() {
+                                    
                                     b.setBackground(new Color(240, 240, 255));
                                 }
                             }, 250 );
@@ -275,7 +302,9 @@ public class Frame extends JFrame{
                         b.setBackground(new Color(255, 120, 120));
                         new Timer().schedule(
                             new TimerTask() {
+                                
                                 public void run() {
+                                    
                                     b.setBackground(new Color(240, 240, 255));
                                 }
                             }, 750 );
