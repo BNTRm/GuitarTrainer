@@ -29,7 +29,7 @@ public class Note {
         return soundFile;
     }
     
-    public void setName(int newId){
+    public void setId(int newId){
         id = newId;
     }
     

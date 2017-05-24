@@ -13,7 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import java.util.Timer;
 import javax.swing.ButtonGroup;
 import javax.swing.JRadioButtonMenuItem;
@@ -23,7 +22,6 @@ public class Frame extends JFrame{
     private Notes notes = new Notes();
     private JLayeredPane lPane;
     private int string, fret, right, wrong, goal = -1;
-    private ImageIcon tap = new ImageIcon("tap.png");
     private JLabel points = new JLabel();
     private JButton play,  note = new JButton();
     private MyButton noteBtns[] = {
@@ -32,7 +30,7 @@ public class Frame extends JFrame{
         new MyButton(1), new MyButton(2), new MyButton(3),
         new MyButton(4), new MyButton(5), new MyButton(6)};
     private JMenuBar menuBar;
-    private JMenu goalMenu/*, timerMenu*/;
+    private JMenu goalMenu;
     private TimerLabel timerLabel = new TimerLabel();
     
     public Frame(){
@@ -66,7 +64,7 @@ public class Frame extends JFrame{
         lPane.add(timerLabel, new Integer(2));
     }
     
-    public void setButtons(){
+    private void setButtons(){
         
         noteBtns[0].setBounds(100, 200, 70, 30);
         noteBtns[1].setBounds(200, 200, 70, 30);
@@ -109,25 +107,8 @@ public class Frame extends JFrame{
         //addTimerMenu();
         
     }
-    /*
-    public void addTimerMenu(){
     
-        timerMenu = new JMenu("Timer");
-        JMenuItem noneTimer = new JMenuItem("None");
-        JMenuItem timer15sec = new JMenuItem("15 seconds");
-        JMenuItem timer30sec = new JMenuItem("30 seconds");
-        JMenuItem timer45sec = new JMenuItem("45 seconds");
-        JMenuItem timer1min = new JMenuItem("1 minute");
-        JMenuItem timer2min = new JMenuItem("2 minute");
-        timerMenu.add(timer15sec);
-        timerMenu.add(timer30sec);
-        timerMenu.add(timer45sec);
-        timerMenu.add(timer1min);
-        timerMenu.add(timer2min);
-        menuBar.add(timerMenu);
-    }
-    */
-    public void addGoalMenu(){
+    private void addGoalMenu(){
         
         goalMenu = new JMenu("Goal");
         JRadioButtonMenuItem noneGoal = new JRadioButtonMenuItem("None");
@@ -182,28 +163,29 @@ public class Frame extends JFrame{
         
         lPane.remove(note);
         lPane.repaint();
-        Random r = new Random(System.currentTimeMillis());
-        string = -1;
-        fret = -1;
-        while(string < 0 || string > 5){
-            string = r.nextInt() % 10;
-        }
-        while(fret < 0 || fret > 11){
-            fret = r.nextInt() % 100;
-        }
-        note.setBounds(notes.getNotes()[string][fret].getX(),
-                notes.getNotes()[string][fret].getY(), 15, 15);
-        lPane.add(note, new Integer(3));
-        notes.playSound(string, fret);
-        note.setBackground(Color.WHITE);
         if((wrong + right) == goal){
             stopTrain();
+        }
+        else{
+            Random r = new Random(System.currentTimeMillis());
+            string = -1;
+            fret = -1;
+            while(string < 0 || string > 5){
+                string = r.nextInt() % 10;
+            }
+            while(fret < 0 || fret > 11){
+                fret = r.nextInt() % 100;
+            }
+            note.setBounds(notes.getNotes()[string][fret].getX(),
+                    notes.getNotes()[string][fret].getY(), 15, 15);
+            lPane.add(note, new Integer(3));
+            notes.playSound(string, fret);
+            note.setBackground(Color.WHITE);
         }
     }
     
     public void rightAnswer() {
         
-        ImageIcon Rtap = new ImageIcon("Rtap.png");
         note.setBackground(new Color(120, 255, 120));
         answerTimer(250);
         right += 1;
@@ -212,7 +194,6 @@ public class Frame extends JFrame{
     
     public void wrongAnswer() {
         
-        ImageIcon Wtap = new ImageIcon("Wtap.png");
         note.setBackground(new Color(255, 120, 120));
         answerTimer(750);
         wrong += 1;
@@ -235,9 +216,9 @@ public class Frame extends JFrame{
         
         String pnts;
         if(goal == -1){
-            pnts = right + "/" + wrong;
+            pnts = right + " | " + wrong;
         } else{
-            pnts = right + "/" + wrong + "/" + goal;
+            pnts = right + " | " + wrong + " | " + goal;
         }
         points.setText(pnts);
         points.repaint();
